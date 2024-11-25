@@ -1,5 +1,5 @@
 import cv2 
-import numpy as np1
+import numpy as np
 
 def plotLineLow(mask, x0, y0, x1, y1):
     num_color_pixels = 0
