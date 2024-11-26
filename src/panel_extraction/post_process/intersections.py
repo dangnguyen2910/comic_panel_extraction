@@ -20,19 +20,8 @@ def calculate_intersection(line1, line2) -> tuple:
 
     px = int(px)
     py = int(py)
-
-    d11 = distance_2_points((px, py), (line1.x1, line1.x2))
-    d12 = distance_2_points((px,py), (line1.x2, line1.y2))
-    d21 = distance_2_points((px, py), (line2.x1, line2.y1))
-    d22 = distance_2_points((px,py), (line2.x2, line2.y2))
-
-    is_inside_line1 = (d11 + d12) <= (line1.length)
-    is_inside_line2 = (d21 + d22) <= (line2.length)
-
-    if (is_inside_line1 or is_inside_line2):
-        return (px, py)
         
-    return None
+    return (px, py)
 
 
 
