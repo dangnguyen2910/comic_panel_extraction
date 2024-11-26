@@ -63,11 +63,8 @@ def plotLineHigh(mask, x0, y0, x1, y1):
 
 
 def calculate_ratio_of_color_pixels_between_two_points(mask,point1, point2):
-    try: 
-        x0, y0 = point1
-        x1, y1 = point2
-    except TypeError: 
-        return None
+    x0, y0 = point1
+    x1, y1 = point2
     
 
     # Bresenham's line algorithm
@@ -89,21 +86,21 @@ def calculate_ratio_of_color_pixels_between_two_points(mask,point1, point2):
 def is_legit(mask, point1, point2, threshold):
     """ The larger the ratio is, the more points will be connected
     since it allows more black pixels between two points """
-    try: 
-        ratio = calculate_ratio_of_color_pixels_between_two_points(mask, point1, point2)
-        if ratio >= threshold:
-            is_legit = True
-        else: 
-            is_legit = False
 
-        return is_legit
-    except TypeError: 
-        return False
+    ratio = calculate_ratio_of_color_pixels_between_two_points(mask, point1, point2)
+    if ratio >= threshold:
+        is_legit = True
+    else: 
+        is_legit = False
+
+    return is_legit
+
 
 
 
 def connect_2_legit_points(mask, point1, point2, threshold) -> np.array:
     legit = is_legit(mask, point1, point2, threshold)
+    print(legit)
 
     if (legit):
         cv2.line(mask, (point1[0], point1[1]), (point2[0], point2[1]), (255,255,0), 1)
