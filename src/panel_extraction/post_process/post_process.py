@@ -100,11 +100,25 @@ def remove_black_noise_with_contours(image, area_threshold=10, min_width=10, min
     return output_image
 
 
+def get_border_lines(image_shape):
+    height, width = image_shape[:2]
+
+    border_lines = [
+        Line(0, 0, width - 1, 0),         # Top 
+        Line(0, height - 1, width - 1, height - 1),  # Bottom 
+        Line(0, 0, 0, height - 1),        # Left 
+        Line(width - 1, 0, width - 1, height - 1)    # Right 
+    ]
+
+    return border_lines
+
 
 def main() -> None: 
     dir = '../../../output/unet_panel/raw/'
-    img_path = "../../../output/unet_panel/raw/pred_mask_raw_1.png"
+    # img_path = "../../../output/unet_panel/raw/pred_mask_raw_1.png"
+    # img_path = "../../../output/unet_panel/raw/pred_mask_raw_2.png"
     # img_path = "../../../output/unet_panel/raw/pred_mask_raw_7.png"
+    img_path = "../../../output/unet_panel/raw/pred_mask_raw_13.png"
     # img_path = "../../../output/unet_panel/raw/pred_mask_raw_27.png"
 
 
@@ -165,7 +179,14 @@ def main() -> None:
     
     plt.imshow(hough_classified.astype(int))
 
+    border_lines = get_border_lines(hough_binary.shape)
+    for line in border_lines: 
+        if line.orientation == 'vertical': 
+            vertical_lines.append(line)
+        else: 
+            horizontal_lines.append(line)
 
+    
 
     # Find intersection
     ax = fig.add_subplot(3,3,7)
@@ -187,9 +208,9 @@ def main() -> None:
     # Connect two points that are legits
     ax = fig.add_subplot(3,3,9)
     for i, (point1, point2) in enumerate(combinations(centroids, 2)): 
-        legit = connect_2_legit_points(hough_binary, point1, point2, threshold=0.1)
+        legit = connect_2_legit_points(hough_binary, point1, point2, threshold=0)
 
-    # plt.imshow(hough_binary, 'gray')
+    plt.imshow(hough_binary, 'gray')
     plt.show()
 
 
