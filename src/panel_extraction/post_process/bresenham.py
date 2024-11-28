@@ -14,8 +14,11 @@ def plotLineLow(mask, x0, y0, x1, y1):
     D = (2 * dy) - dx
     y = y0
 
+ 
     for x in range(x0, x1+1):
-        if (mask[x,y] != 0):
+        # print((x,y), mask[x,y])
+        is_white = (mask[y-2:y+3, x-2:y+3] != 0).any()
+        if is_white:
             num_color_pixels += 1
         
         if D > 0: 
@@ -26,6 +29,8 @@ def plotLineLow(mask, x0, y0, x1, y1):
 
         num_pixels += 1
 
+    # print(f"Number of color pixels: {num_color_pixels}")
+    # print(f"Number of pixels: {num_pixels}")
     ratio = num_color_pixels / num_pixels
     return ratio
 
@@ -44,8 +49,10 @@ def plotLineHigh(mask, x0, y0, x1, y1):
     D = (2 * dx) - dy
     x = x0
 
+
     for y in range(y0, y1+1):
-        if (mask[x,y] != 0):
+        is_white = (mask[y-2:y+3, x-2:x+3] != 0).any()
+        if is_white:
             num_color_pixels += 1
             
         num_pixels += 1
@@ -56,7 +63,8 @@ def plotLineHigh(mask, x0, y0, x1, y1):
         else : 
             D = D + 2 * dx
 
-
+    # print(f"Number of color pixels: {num_color_pixels}")
+    # print(f"Number of pixels: {num_pixels}")
     ratio = num_color_pixels / num_pixels
     return ratio
 
@@ -65,7 +73,7 @@ def plotLineHigh(mask, x0, y0, x1, y1):
 def calculate_ratio_of_color_pixels_between_two_points(mask,point1, point2):
     x0, y0 = point1
     x1, y1 = point2
-    
+
 
     # Bresenham's line algorithm
     if (abs(y1 - y0) < abs(x1 - x0)):
@@ -98,11 +106,11 @@ def is_legit(mask, point1, point2, threshold):
 
 
 
-def connect_2_legit_points(mask, point1, point2, threshold) -> np.array:
+def connect_2_legit_points(mask:np.array, target: np.array,  point1, point2, threshold) -> None:
     legit = is_legit(mask, point1, point2, threshold)
-    print(legit)
 
     if (legit):
-        cv2.line(mask, (point1[0], point1[1]), (point2[0], point2[1]), (255,255,0), 1)
-
-    return legit
+        # print(legit)
+        # print(f"(x0, y0) = {(point1[0], point1[1])}")
+        # print(f"(x1, y1) = {(point2[0], point2[1])}")
+        cv2.line(target, (point1[0], point1[1]), (point2[0], point2[1]), (255,255,0), 3)
