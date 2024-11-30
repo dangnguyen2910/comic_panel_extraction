@@ -45,7 +45,7 @@ def create_mask(shape: tuple, label_path) -> np.array:
     for index, polygon in enumerate(polygon_list): 
         polygon = np.array(polygon, np.int32)
         polygon = np.reshape(polygon, (-1, 2))
-        mask = draw_one_polygon_to_mask(mask, polygon, color=1)
+        mask = draw_one_polygon_to_mask(mask, polygon, color=index + 1)
 
     return mask
 
@@ -73,7 +73,7 @@ def save_mask(label_dir, mask_dir) -> None:
         label_path = os.path.join(label_dir, label_name)
         mask_shape = get_shape(label_path)
         mask = create_mask(mask_shape, label_path)
-        cv2.imwrite(mask_dir + label_name[:-3] + "jpg", mask)        
+        plt.imsave(mask_dir + label_name[:-3] + "jpg", mask)        
 
 
 def main() -> None: 
@@ -85,27 +85,27 @@ def main() -> None:
     label_dir = '/home/dangnh/b3/group_project/data/vagabond/label_panel_xml/'
     mask_dir = '/home/dangnh/b3/group_project/data/vagabond/mask_panel/'
 
-    # save_mask(label_dir, mask_dir)
+    save_mask(label_dir, mask_dir)
 
-    transform = v2.Compose([
-        v2.Resize([640, 640])
-    ])
-
-
-    dataset = VagabondDatasetPanel(img_dir, mask_dir,
-                                   transform=transform,
-                                   mask_transform=transform)
-                                   
-    generator = torch.Generator().manual_seed(42)
-    train_dataset, test_dataset =  random_split(dataset, [0.8, 0.2])
-
-    batch_size = 2
-    train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-    test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
-
-    model = get_unet(in_channels=3, out_channels=1).to(device)
-    loss_fn = torch.nn.BCEWithLogitsLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr = 0.0001)
+    # transform = v2.Compose([
+    #     v2.Resize([640, 640])
+    # ])
+    #
+    #
+    # dataset = VagabondDatasetPanel(img_dir, mask_dir,
+    #                                transform=transform,
+    #                                mask_transform=transform)
+    #
+    # generator = torch.Generator().manual_seed(42)
+    # train_dataset, test_dataset =  random_split(dataset, [0.8, 0.2])
+    #
+    # batch_size = 2
+    # train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+    # test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
+    #
+    # model = get_unet(in_channels=3, out_channels=1).to(device)
+    # loss_fn = torch.nn.BCEWithLogitsLoss()
+    # optimizer = torch.optim.Adam(model.parameters(), lr = 0.0001)
 
     # img, mask = dataset[10]
     # print(f'Img shape: {img.size()}, Mask shape: {mask.size()}')
@@ -116,8 +116,8 @@ def main() -> None:
 
 
     # print(model)
-    model = train(model, train_dataloader, train_dataloader, 
-                  loss_fn, optimizer, epochs=1, device=device)
+    # model = train(model, train_dataloader, train_dataloader, 
+                  # loss_fn, optimizer, epochs=1, device=device)
 
     # res = predict(model, img.unsqueeze(0), device=device)
     # print(res, res.size())
