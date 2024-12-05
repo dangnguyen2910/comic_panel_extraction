@@ -10,7 +10,7 @@ from line import Line
 from morphology import smooth_edges, morphing
 from bresenham import connect_2_legit_points
 from intersections import find_intersection
-from iou import calculate_mean_iou
+from metric import calculate_mean_iou, calculate_mean_dice
 
 
 
@@ -110,7 +110,7 @@ def get_border_lines(image_shape):
 
 
 def main() -> None: 
-    pred_dir = '../../../output/unet_panel/raw/'
+    pred_dir = '../../../output/unet_panel/raw_filter/'
     gt_dir = '../../../output/unet_panel/true_mask/'
 
     # img_path = "../../../output/unet_panel/raw/pred_mask_raw_1.png"
@@ -128,6 +128,7 @@ def main() -> None:
     # gt_path = "../../../output/unet_panel/true_mask/true_mask_45.png"
 
     ious = []
+    dices = []
 
     # gt = cv2.imread(gt_path, cv2.IMREAD_GRAYSCALE)
 
@@ -190,10 +191,13 @@ def main() -> None:
                 # connect_2_legit_points(hough_binary, hough_classified, (0, 383), (362, 383), threshold=0.6)
                 # break
 
-        mean_iou, iou_values = calculate_mean_iou(predicted_mask=res, ground_truth_mask=gt)
+        mean_iou, _ = calculate_mean_iou(predicted_mask=res, ground_truth_mask=gt)
+        mean_dice, _ = calculate_mean_dice(res, gt)
+        dices.append(mean_dice)
         ious.append(mean_iou)
         
-    print(f"mIoU: {np.mean(ious)}")
+    print(f"mIoU: {np.mean(ious):.3f}")
+    print(f"Mean dice coef: {np.mean(dices):.3f}")
 
 
 
