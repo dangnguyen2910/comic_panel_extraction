@@ -1,0 +1,6 @@
+__pycache__
+paper
+output
+.vscode
+data/
+test.ipynb
