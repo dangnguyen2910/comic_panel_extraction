@@ -4,3 +4,9 @@ output
 .vscode
 data/
 test.ipynb
+.ipynb_checkpoints
+group_project/logs
+*.jpg
+*.png
+*.xml
+group_project
